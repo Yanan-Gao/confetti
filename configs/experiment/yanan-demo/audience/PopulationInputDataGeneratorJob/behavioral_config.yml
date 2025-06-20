@@ -1,0 +1,11 @@
+environment: experiment
+experimentName: yanan-demo
+model: RSMV2
+inputDataS3Bucket: thetradedesk-mlplatform-us-east-1
+customInputDataPath: None
+subFolderKey: split
+subFolderValue: Population
+syntheticIdLength: 500
+inputDataS3Path: data/experiment/yanan-demo/audience/RSMV2/Imp_Seed_None/v=1
+audienceJarBranch: master
+audienceJarVersion: latest

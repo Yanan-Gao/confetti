@@ -1,0 +1,12 @@
+environment: experiment
+experimentName: yanan-demo
+model: RSMV2
+tag: Seed_None
+version: 1
+run_date: '{{ run_date }}'
+lookBack: 7
+startDate: '2025-02-13'
+oosDataS3Bucket: thetradedesk-mlplatform-us-east-1
+oosDataS3Path: data/experiment/yanan-demo/audience/RSMV2/Seed_None/v=1
+audienceJarBranch: master
+audienceJarVersion: latest

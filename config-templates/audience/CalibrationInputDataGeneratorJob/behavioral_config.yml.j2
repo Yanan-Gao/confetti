@@ -1,0 +1,15 @@
+environment: {{ environment }}
+{% if experimentName is defined %}
+experimentName: {{ experimentName }}
+{% endif %}
+model: "{{ model | default('RSMV2') }}"
+tag: "{{ tag | default('Seed_None') }}"
+version: {{ version | default(1) }}
+run_date: "{{ run_date }}" # job running logical date
+lookBack: {{ lookBack | default(3) }}
+startDate: "{{ startDate | default('2025-02-13') }}"
+oosDataS3Bucket: "{{ oosDataS3Bucket | default('thetradedesk-mlplatform-us-east-1') }}"
+oosDataS3Path: "{{ oosDataS3Path | default('data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1') }}"
+
+audienceJarBranch: "{{ audienceJarBranch | default('master') }}"
+audienceJarVersion: "{{ audienceJarVersion | default('latest') }}"

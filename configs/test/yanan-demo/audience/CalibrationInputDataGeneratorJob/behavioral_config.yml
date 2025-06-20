@@ -1,0 +1,12 @@
+environment: test
+experimentName: yanan-demo
+model: RSMV2
+tag: Seed_None
+version: 1
+run_date: '{{ run_date }}'
+lookBack: 5
+startDate: '2025-02-13'
+oosDataS3Bucket: thetradedesk-mlplatform-us-east-1
+oosDataS3Path: data/test/yanan-demo/audience/RSMV2/Seed_None/v=1
+audienceJarBranch: gyn-AUDAUTO-3592-confetti-config-auto-resolver
+audienceJarVersion: latest
