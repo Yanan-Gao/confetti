@@ -1,0 +1,2 @@
+seed_id_path: s3://thetradedesk-mlplatform-us-east-1/data/dev/audience/scores/seedids/v=2/date=20250216/
+out_path: s3://thetradedesk-mlplatform-us-east-1/data/dev/audience/scores/tdid2seedidV2/v=1/date=20250216/

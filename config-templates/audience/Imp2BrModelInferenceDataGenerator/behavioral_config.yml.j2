@@ -1,0 +1,10 @@
+environment: {{ environment }}
+{% if experimentName is defined %}
+experimentName: {{ experimentName }}
+{% endif %}
+bidImpressionsS3Path: "{{ bidImpressionsS3Path | default('prod/bidsimpressions/') }}"
+feature_path: "{{ feature_path | default('s3://thetradedesk-mlplatform-us-east-1/models/prod/RSM/full_model/' ~ run_date.strftime(version_date_format) ~ '/features.json') }}"
+runDate: "{{ run_date.strftime(run_date_format) }}" # job running logical date
+
+audienceJarBranch: "{{ audienceJarBranch | default('master') }}"
+audienceJarVersion: "{{ audienceJarVersion | default('latest') }}"

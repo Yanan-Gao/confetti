@@ -1,0 +1,14 @@
+environment: test
+experimentName: yanan-demo
+salt: TRM
+tdid_emb_path: s3://thetradedesk-mlplatform-us-east-1/users/youjun.yuan/rsmv2/emb/agg_tdid/date=20250216/
+seed_emb_path: s3://thetradedesk-mlplatform-us-east-1/configdata/test/audience/embedding/RSMV2/RSMv2TestTreatment/v=1/20250216000000/embedding.parquet.gzip
+density_feature_path: s3://thetradedesk-mlplatform-us-east-1/features/feature_store/prod/profiles/source=bidsimpression/index=TDID/job=DailyTDIDDensityScoreSplitJob/v=1/date=20250216/
+policy_table_path: s3://thetradedesk-mlplatform-us-east-1/configdata/prod/audience/policyTable/RSM/v=1/20250216000000/
+avail_path: s3://thetradedesk-mlplatform-us-east-1/data/prodTest/audience/RSMV2/Availycp-dup_plus/v=2/20250216000000/
+seed_density_path: s3://thetradedesk-mlplatform-us-east-1/features/feature_store/prodTest/profiles/source=bidsimpression/index=FeatureKeyValue/job=DailyDensityScoreReIndexingJob/config=SyntheticIdDensityScoreCategorized/date=20250216/
+density_split: -1
+EmbeddingSize: 64
+runDate: "{{ run_date.strftime('%Y-%m-%d') }}"
+audienceJarBranch: master
+audienceJarVersion: latest
