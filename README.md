@@ -61,3 +61,15 @@ You can clean out generated files with:
 make clean
 ```
 The clean target uses Python so it works on Windows as well as Unix-like systems.
+
+## Customizing date formats
+
+Templates can format dates using two global variables:
+
+- `run_date_format` controls how the `run_date` placeholder is rendered and
+  defaults to `%Y-%m-%d`.
+- `version_date_format` controls paths that incorporate the run date and
+  defaults to `%Y%m%d`.
+
+Override these values in your job-specific configuration files when a different
+format is required.

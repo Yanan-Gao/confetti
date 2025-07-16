@@ -5,7 +5,7 @@ experimentName: {{ experimentName }}
 model: "{{ model | default('RSMV2') }}"
 tag: "{{ tag | default('Seed_None') }}"
 version: {{ version | default(1) }}
-run_date: "{{ run_date }}" # job running logical date
+run_date: "{{ run_date.strftime(run_date_format) }}" # job running logical date
 lookBack: {{ lookBack | default(3) }}
 startDate: "{{ startDate | default('2025-02-13') }}"
 oosDataS3Bucket: "{{ oosDataS3Bucket | default('thetradedesk-mlplatform-us-east-1') }}"

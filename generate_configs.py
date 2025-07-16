@@ -28,6 +28,19 @@ import yaml
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, exceptions
 
 
+class TemplateDumper(yaml.SafeDumper):
+    """YAML dumper that preserves Jinja placeholders."""
+
+
+def _str_presenter(dumper, data):
+    """Quote strings containing Jinja syntax with double quotes."""
+    style = '"' if "{{" in data or "}}" in data else None
+    return dumper.represent_scalar("tag:yaml.org,2002:str", data, style=style)
+
+
+TemplateDumper.add_representer(str, _str_presenter)
+
+
 class RunDatePlaceholder:
     """Object that renders Jinja placeholders for run_date."""
 
@@ -47,9 +60,9 @@ class Env(str, Enum):
     TEST = "test"
 
 
-TEMPLATE_ROOT = 'config-templates'
-OVERRIDE_ROOT = 'config-overrides'
-OUTPUT_ROOT = 'configs'
+TEMPLATE_ROOT = "config-templates"
+OVERRIDE_ROOT = "config-overrides"
+OUTPUT_ROOT = "configs"
 
 # Each job group contains templates for individual jobs. Each job has two
 # template files: ``behavioral_config.yml.j2`` and ``outputs.yml.j2``. These
@@ -63,7 +76,8 @@ jinja_env = Environment(
 jinja_env.globals.update(
     # Use a placeholder so date is resolved at run time
     run_date=RunDatePlaceholder(),
-    version_date_format='%Y%m%d',
+    run_date_format="%Y-%m-%d",
+    version_date_format="%Y%m%d",
 )
 
 
@@ -71,7 +85,7 @@ def find_templates():
     templates = {}
     for root, _, files in os.walk(TEMPLATE_ROOT):
         for f in files:
-            if f.endswith('.j2'):
+            if f.endswith(".j2"):
                 rel = os.path.relpath(os.path.join(root, f), TEMPLATE_ROOT)
                 # ensure Jinja2-compatible separators
                 rel = rel.replace(os.sep, "/")
@@ -107,7 +121,7 @@ def find_groups_for_env(env_path):
         if not os.path.isdir(group_dir):
             continue
         for root, _, files in os.walk(group_dir):
-            if any(f.endswith('.yml') for f in files):
+            if any(f.endswith(".yml") for f in files):
                 groups.append(entry)
                 break
     return groups
@@ -115,7 +129,7 @@ def find_groups_for_env(env_path):
 
 def parse_env_path(env_path):
     """Return (env_name, exp_name) tuple from a path like ``prod`` or ``experiment/foo``."""
-    parts = env_path.split('/')
+    parts = env_path.split("/")
     env_name = parts[0]
     exp_name = parts[1] if len(parts) > 1 else None
     return env_name, exp_name
@@ -123,14 +137,14 @@ def parse_env_path(env_path):
 
 def validate_cli_args(env_name, exp):
     """Validate and normalize the environment/experiment arguments."""
-    if env_name == 'all':
+    if env_name == "all":
         if exp is not None:
             print(
                 "When env=all, exp must not be provided",
                 file=sys.stderr,
             )
             sys.exit(1)
-        return env_name, 'all'
+        return env_name, "all"
 
     try:
         env = Env(env_name)
@@ -142,7 +156,7 @@ def validate_cli_args(env_name, exp):
         if exp is not None:
             print("exp parameter is not allowed when env=prod", file=sys.stderr)
             sys.exit(1)
-        return env.value, 'all'
+        return env.value, "all"
 
     if not exp:
         print(
@@ -161,7 +175,7 @@ def render_job(env_name, exp_name, env_path, group, job_name, template, filename
         env_path,
         group,
         job_name,
-        'config.yml',
+        "config.yml",
     )
 
     data = {}
@@ -169,17 +183,17 @@ def render_job(env_name, exp_name, env_path, group, job_name, template, filename
         with open(override_file) as f:
             data = yaml.safe_load(f) or {}
 
-    data.setdefault('environment', env_name)
+    data.setdefault("environment", env_name)
     if env_name in (Env.EXPERIMENT.value, Env.TEST.value):
-        data.setdefault('experimentName', exp_name)
+        data.setdefault("experimentName", exp_name)
     else:
-        data.pop('experimentName', None)
+        data.pop("experimentName", None)
 
     if exp_name:
         partition = f"{env_name}/{exp_name}"
     else:
         partition = env_name
-    data.setdefault('data_namespace', partition)
+    data.setdefault("data_namespace", partition)
 
     out_dir = os.path.join(OUTPUT_ROOT, env_path, group, job_name)
     os.makedirs(out_dir, exist_ok=True)
@@ -206,25 +220,26 @@ def render_job(env_name, exp_name, env_path, group, job_name, template, filename
         return
 
     data_dict = yaml.safe_load(rendered) or {}
-    data_dict.pop('job_name', None)
+    data_dict.pop("job_name", None)
 
-    with open(out_path, 'w') as f:
-        yaml.safe_dump(
+    with open(out_path, "w") as f:
+        yaml.dump(
             data_dict,
             f,
+            Dumper=TemplateDumper,
             sort_keys=False,
         )
-    print(f'Wrote {out_path}')
+    print(f"Wrote {out_path}")
 
 
 def generate_group(env_name, exp_name, env_path, group, templates):
     """Generate all jobs for a single group."""
     for t_path, template in templates.items():
         job_path = os.path.splitext(t_path)[0]
-        if not job_path.startswith(f'{group}/'):
+        if not job_path.startswith(f"{group}/"):
             continue
         job_dir, filename = os.path.split(job_path)
-        job_name = job_dir[len(f'{group}/'):]
+        job_name = job_dir[len(f"{group}/") :]
         render_job(env_name, exp_name, env_path, group, job_name, template, filename)
 
 
@@ -235,17 +250,17 @@ def generate_env(env_name, exp_name, env_path, templates):
         generate_group(env_name, exp_name, env_path, group, templates)
 
 
-def generate_all(env_filter='all', exp_filter='all'):
+def generate_all(env_filter="all", exp_filter="all"):
     """Generate configuration files following the env -> exp layout.
 
     All groups that contain overrides under the selected environment are
     processed automatically.
     """
-    if env_filter == 'all':
-        exp_filter = 'all'
+    if env_filter == "all":
+        exp_filter = "all"
     templates = find_templates()
     env_paths = find_env_roots()
-    if env_filter != 'all':
+    if env_filter != "all":
         env_paths = [p for p in env_paths if p.startswith(env_filter)]
         if not env_paths:
             print(f"Environment '{env_filter}' not found", file=sys.stderr)
@@ -253,7 +268,7 @@ def generate_all(env_filter='all', exp_filter='all'):
 
     for env_path in env_paths:
         env_name, exp_name = parse_env_path(env_path)
-        if exp_filter != 'all' and exp_name != exp_filter:
+        if exp_filter != "all" and exp_name != exp_filter:
             continue
         generate_env(env_name, exp_name, env_path, templates)
 
@@ -263,11 +278,11 @@ def parse_cli_args(argv):
     env_name = None
     exp = None
     for arg in argv:
-        if '=' in arg:
-            key, value = arg.split('=', 1)
-            if key == 'env':
+        if "=" in arg:
+            key, value = arg.split("=", 1)
+            if key == "env":
                 env_name = value
-            elif key == 'exp':
+            elif key == "exp":
                 exp = value
     if env_name is None:
         print(
@@ -279,6 +294,6 @@ def parse_cli_args(argv):
     return validate_cli_args(env_name, exp)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     env_name, exp = parse_cli_args(sys.argv[1:])
     generate_all(env_name, exp)
