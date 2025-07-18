@@ -1,0 +1,1 @@
+populationOutputData3Path: "{{ populationOutputData3Path | default('s3://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1' ~ run_date.strftime(full_version_date_format) ~ '/split=Population') }}"
