@@ -1,0 +1,34 @@
+environment: {{ environment }}
+{% if experimentName is defined %}
+experimentName: {{ experimentName }}
+{% endif %}
+model: "{{ model | default('RSMV2') }}"
+featureStoreReadEnv: "{{ featureStoreReadEnv | default(data_namespace) }}"
+useTmpFeatureGenerator: {{ useTmpFeatureGenerator | default(false) | lower }}
+extraSamplingThreshold: {{ extraSamplingThreshold | default(0.05) }}
+rsmV2FeatureSourcePath: "{{ rsmV2FeatureSourcePath | default('/featuresV2.json') }}"
+subFolder: "{{ subFolder | default('Full') }}"
+densityFeatureReadPathWithoutSlash: "{{ densityFeatureReadPathWithoutSlash | default('profiles/source=bidsimpression/index=TDID/job=DailyTDIDDensityScoreSplitJob/v=1') }}"
+sensitiveFeatureColumns: "{{ sensitiveFeatureColumns | default('') }}"
+persistHoldoutSet: {{ persistHoldoutSet | default(true) | lower }}
+optInSeedType: "{{ optInSeedType | default('Active') }}"
+optInSeedFilterExpr: "{{ optInSeedFilterExpr | default('true') }}"
+posNegRatio: {{ posNegRatio | default(50) }}
+lowerLimitPosCntPerSeed: {{ lowerLimitPosCntPerSeed | default(200) }}
+rsmV2UserSampleSalt: "{{ rsmV2UserSampleSalt | default('TRM') }}"
+rsmV2PopulationUserSampleIndex: "{{ rsmV2PopulationUserSampleIndex | default('3,5,7') }}"
+rsmV2UserSampleRatio: {{ rsmV2UserSampleRatio | default(1) }}
+samplerName: "{{ samplerName | default('RSMV2') }}"
+overrideMode: {{ overrideMode | default(false) | lower }}
+splitRemainderHashSalt: "{{ splitRemainderHashSalt | default('split_RSMV2') }}"
+upLimitPosCntPerSeed: {{ upLimitPosCntPerSeed | default(40000) }}
+saveIntermediateResult: {{ saveIntermediateResult | default(false) | lower }}
+intermediateResultBasePathEndWithoutSlash: "{{ intermediateResultBasePathEndWithoutSlash | default('thetradedesk-mlplatform-us-east-1/users/yixuan.zheng/allinone/dataset/' ~ (subFolder | default('Full'))) }}"
+maxLabelLengthPerRow: {{ maxLabelLengthPerRow | default(50) }}
+minRowNumsPerPartition: {{ minRowNumsPerPartition | default(100000) }}
+trainValHoldoutTotalSplits: {{ trainValHoldoutTotalSplits | default(10) }}
+activeSeedIdWhiteList: "{{ activeSeedIdWhiteList | default('') }}"
+runDate: "{{ run_date.strftime(run_date_format) }}" # job running logical date
+
+audienceJarBranch: "{{ audienceJarBranch | default('master') }}"
+audienceJarVersion: "{{ audienceJarVersion | default('latest') }}"

@@ -1,0 +1,10 @@
+environment: prod
+model: RSMV2
+inputDataS3Bucket: thetradedesk-mlplatform-us-east-1
+subFolderKey: split
+subFolderValue: Population
+syntheticIdLength: 500
+inputDataS3Path: data/prod/audience/RSMV2/Imp_Seed_None/v=1
+runDate: "{{ run_date.strftime('%Y-%m-%d') }}"
+audienceJarBranch: master
+audienceJarVersion: latest

@@ -1,0 +1,1 @@
+out_path: "s3://thetradedesk-mlplatform-us-east-1/data/prod/audience/RSMV2/Imp_Seed_None/v=1/{{ run_date.strftime('%Y%m%d000000') }}/"

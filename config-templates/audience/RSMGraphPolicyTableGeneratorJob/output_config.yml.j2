@@ -1,0 +1,1 @@
+policyS3Path: "{{ policyS3Path | default('configdata/' ~ data_namespace ~ '/audience/policyTable/' ~ (model | default('RSMV2')) ~ '/v=1') }}"
