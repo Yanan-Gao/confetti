@@ -1,0 +1,1 @@
+outputEmbeddingPath: "{{ outputEmbeddingPath | default('s3://thetradedesk-mlplatform-us-east-1/configdata/' ~ data_namespace ~ '/audience/embedding/RSMV2/v=1/' ~ run_date.strftime(version_date_format) ~ '000000') }}"

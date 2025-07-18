@@ -1,0 +1,1 @@
+out_path: "{{ out_path | default('s3://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Imp_Seed_None/v=1/'  ~ run_date.strftime(full_version_date_format) ~ '/' ) }}"
