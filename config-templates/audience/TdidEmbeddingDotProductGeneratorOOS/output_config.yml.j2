@@ -1,0 +1,2 @@
+seed_id_path: "{{ seed_id_path | default('s3://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/scores/seedids/v=2/date=' ~ run_date.strftime(version_date_format) ~ '/') }}"
+out_path: "{{ out_path | default('s3://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/scores/tdid2seedid_raw/v=1/date=' ~ run_date.strftime(version_date_format) ~ '/') }}"

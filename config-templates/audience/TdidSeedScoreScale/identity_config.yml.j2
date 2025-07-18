@@ -1,0 +1,17 @@
+environment: {{ environment }}
+{% if experimentName is defined %}
+experimentName: {{ experimentName }}
+{% endif %}
+salt: "{{ salt | default('TRM') }}"
+seed_id_path: "{{ seed_id_path | default('s3://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/scores/seedids/v=2/date=' ~ run_date.strftime(version_date_format) ~ '/') }}"
+raw_score_path: "{{ raw_score_path | default('s3://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/scores/tdid2seedid_raw/v=1/date=' ~ run_date.strftime(version_date_format) ~ '/') }}"
+policy_table_path: "{{ policy_table_path | default('s3://thetradedesk-mlplatform-us-east-1/configdata/prod/audience/policyTable/RSM/v=1/' ~ run_date.strftime(version_date_format) ~ '000000/') }}"
+smooth_factor: {{ smooth_factor | default(30.0) }}
+userLevelUpperCap: {{ userLevelUpperCap | default(1000000.0) }}
+accuracy: {{ accuracy | default(1000) }}
+sampleRateForPercentile: {{ sampleRateForPercentile | default(0.3) }}
+skipPercentile: {{ skipPercentile | default(true) | lower }}
+runDate: "{{ run_date.strftime(run_date_format) }}" # job running logical date
+
+audienceJarBranch: "{{ audienceJarBranch | default('master') }}"
+audienceJarVersion: "{{ audienceJarVersion | default('latest') }}"

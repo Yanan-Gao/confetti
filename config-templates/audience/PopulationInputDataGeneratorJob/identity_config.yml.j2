@@ -1,0 +1,17 @@
+environment: {{ environment }}
+{% if experimentName is defined %}
+experimentName: {{ experimentName }}
+{% endif %}
+model: "{{ model | default('RSMV2') }}"
+inputDataS3Bucket: "{{ inputDataS3Bucket | default('thetradedesk-mlplatform-us-east-1') }}"
+{% if customInputDataPath is defined %}
+customInputDataPath: {{ customInputDataPath }}
+{% endif %}
+subFolderKey: "{{ subFolderKey | default('split') }}"
+subFolderValue: "{{ subFolderValue | default('Population') }}"
+syntheticIdLength: {{ syntheticIdLength | default(500) }}
+inputDataS3Path: "{{ inputDataS3Path | default('data/' ~ data_namespace ~ '/audience/RSMV2/Imp_Seed_None/v=1') }}"
+runDate: "{{ run_date.strftime(run_date_format) }}" # job running logical date
+
+audienceJarBranch: "{{ audienceJarBranch | default('master') }}"
+audienceJarVersion: "{{ audienceJarVersion | default('latest') }}"

@@ -1,0 +1,2 @@
+seed_id_path: "s3://thetradedesk-mlplatform-us-east-1/data/experiment/yanan-demo/audience/scores/seedids/v=2/date={{ run_date.strftime('%Y%m%d') }}/"
+out_path: "s3://thetradedesk-mlplatform-us-east-1/data/experiment/yanan-demo/audience/scores/tdid2seedid_raw/v=1/date={{ run_date.strftime('%Y%m%d') }}/"
