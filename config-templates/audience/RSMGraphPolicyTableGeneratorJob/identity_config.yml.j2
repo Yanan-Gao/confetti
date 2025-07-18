@@ -1,0 +1,49 @@
+model: "{{ model | default('RSMV2') }}"
+modelName: "{{ modelName | default('RSM') }}"
+storageCloud: "{{ storageCloud | default('AWS') }}"
+{% if seedMetaDataRecentVersion is defined %}
+seedMetaDataRecentVersion: {{ seedMetaDataRecentVersion }}
+{% endif %}
+seedMetadataS3Bucket: "{{ seedMetadataS3Bucket | default('ttd-datprd-us-east-1') }}"
+countryDensityThreshold: {{ countryDensityThreshold | default(0.8) }}
+seedMetadataS3Path: "{{ seedMetadataS3Path | default('prod/data/SeedDetail/v=1/') }}"
+seedRawDataS3Bucket: "{{ seedRawDataS3Bucket | default('ttd-datprd-us-east-1') }}"
+seedRawDataS3Path: "{{ seedRawDataS3Path | default('prod/data/Seed/v=1') }}"
+{% if seedRawDataRecentVersion is defined %}
+seedRawDataRecentVersion: {{ seedRawDataRecentVersion }}
+{% endif %}
+policyTableResetSyntheticId: {{ policyTableResetSyntheticId | default(false) | lower }}
+conversionLookBack: {{ conversionLookBack | default(5) }}
+expiredDays: {{ expiredDays | default(7) }}
+policyTableLookBack: {{ policyTableLookBack | default(3) }}
+activeAdvertiserLookBackDays: {{ activeAdvertiserLookBackDays | default(180) }}
+newSeedLookBackDays: {{ newSeedLookBackDays | default(7) }}
+userDownSampleHitPopulation: {{ userDownSampleHitPopulation | default(100000) }}
+lookBack: {{ lookBack | default(3) }}
+policyS3Bucket: "{{ policyS3Bucket | default('thetradedesk-mlplatform-us-east-1') }}"
+maxVersionsToKeep: {{ maxVersionsToKeep | default(30) }}
+reuseAggregatedSeedIfPossible: {{ reuseAggregatedSeedIfPossible | default(true) | lower }}
+bidImpressionRepartitionNum: {{ bidImpressionRepartitionNum | default(4096) }}
+seedRepartitionNum: {{ seedRepartitionNum | default(32) }}
+bidImpressionLookBack: {{ bidImpressionLookBack | default(1) }}
+graphUniqueCountKeepThreshold: {{ graphUniqueCountKeepThreshold | default(20) }}
+graphScoreThreshold: {{ graphScoreThreshold | default(0.01) }}
+seedJobParallel: {{ seedJobParallel | default(8) }}
+seedProcessLowerThreshold: {{ seedProcessLowerThreshold | default(2000) }}
+seedProcessUpperThreshold: {{ seedProcessUpperThreshold | default(100000000) }}
+ttdOwnDataUpperThreshold: {{ ttdOwnDataUpperThreshold | default(200000000) }}
+seedExtendGraphUpperThreshold: {{ seedExtendGraphUpperThreshold | default(3000000) }}
+activeUserRatio: {{ activeUserRatio | default(0.4) }}
+aemPixelLimit: {{ aemPixelLimit | default(5000) }}
+selectedPixelsConfigPath: "{{ selectedPixelsConfigPath | default('s3a://thetradedesk-mlplatform-us-east-1/configdata/prodTest/audience/other/AEM/selectedPixelTrackingTagIds/') }}"
+useSelectedPixel: {{ useSelectedPixel | default(false) | lower }}
+campaignFlightStartingBufferInDays: {{ campaignFlightStartingBufferInDays | default(14) }}
+allRSMSeed: {{ allRSMSeed | default(false) | lower }}
+densityFeatureScoreNewSeedPrefix: {{ densityFeatureScoreNewSeedPrefix |  default('s3a://thetradedesk-mlplatform-us-east-1/features/feature_store/prod/profiles/source=bidsimpression/index=SeedId/metadata/newSeed/v=1/') }}
+readSeedDetailMode: {{ readSeedDetailMode | default(false) | lower }}
+saltToSampleUser: "{{ saltToSampleUser | default('0BgGCE') }}"
+policyS3Path: "{{ policyS3Path | default('configdata/' ~ data_namespace ~ '/audience/policyTable/' ~ (model | default('RSMV2')) ~ '/v=1') }}"
+
+runDate: "{{ run_date.strftime(run_date_format) }}" # job running logical date
+audienceJarBranch: "{{ audienceJarBranch | default('master') }}"
+audienceJarVersion: "{{ audienceJarVersion | default('latest') }}"

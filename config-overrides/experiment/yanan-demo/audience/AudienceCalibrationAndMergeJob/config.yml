@@ -1,0 +1,7 @@
+anchorStartDate: 2025-04-14
+tmpNonSenEmbeddingDataS3Path: configdata/prod/audience/embedding_temp/RSMV2/nonsensitive/v=1
+tmpSenEmbeddingDataS3Path: configdata/prod/audience/embedding_temp/RSMV2/sensitive/v=1
+inferenceDataS3Path: data/prod/audience/RSMV2/prediction/
+embeddingDataS3Path: configdata/prod/audience/embedding/RSMV2/v=1
+outputEmbeddingPath: configdata/experiment/yanan-demo/audience/embedding/RSMV2/v=1
+embeddingRecentVersion: 20250628000000

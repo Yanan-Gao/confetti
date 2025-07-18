@@ -1,0 +1,20 @@
+model: "{{ model | default('RSM') }}"
+mlplatformS3Bucket: "{{ mlplatformS3Bucket | default('thetradedesk-mlplatform-us-east-1') }}"
+{% if embeddingRecentVersion is defined %}
+embeddingRecentVersion: {{ embeddingRecentVersion }}
+{% endif %}
+runDate: "{{ run_date.strftime(run_date_format) }}" # job running logical date
+anchorStartDate: "{{ anchorStartDate | default('2025-03-05') }}"
+smoothFactor: {{ smoothFactor | default(30.0) }}
+locationFactor: {{ locationFactor | default(0.8) }}
+baselineHitRate: {{ baselineHitRate | default(1E-8) }}
+recursiveWeight: {{ recursiveWeight | default(0.1) }}
+writeMode: "{{ writeMode | default('overwrite') }}"
+tmpNonSenEmbeddingDataS3Path: "{{ tmpNonSenEmbeddingDataS3Path | default('configdata/' ~ data_namespace ~ '/audience/embedding_temp/RSMV2/nonsensitive/v=1') }}"
+tmpSenEmbeddingDataS3Path: "{{ tmpSenEmbeddingDataS3Path | default('configdata/' ~ data_namespace ~ '/audience/embedding_temp/RSMV2/sensitive/v=1') }}"
+inferenceDataS3Path: "{{ inferenceDataS3Path | default('data/' ~ data_namespace ~ '/audience/RSMV2/prediction') }}"
+embeddingSize: {{ embeddingSize | default(64) }}
+embeddingDataS3Path: "{{ embeddingDataS3Path | default('configdata/' ~ data_namespace ~ '/audience/embedding/RSMV2/v=1') }}"
+
+audienceJarBranch: "{{ audienceJarBranch | default('master') }}"
+audienceJarVersion: "{{ audienceJarVersion | default('latest') }}"
