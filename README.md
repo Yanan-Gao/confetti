@@ -73,3 +73,10 @@ Templates can format dates using two global variables:
 
 Override these values in your job-specific configuration files when a different
 format is required.
+
+## CI pipeline
+
+When a merge request updates `config-overrides/` without regenerating the files
+under `configs/`, the GitLab pipeline automatically runs `make build env=all`.
+If new files are produced, a commit named `ci: auto-generate configs` is pushed
+back to the branch so the generated configs stay in sync.
