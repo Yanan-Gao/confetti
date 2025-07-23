@@ -22,6 +22,8 @@ auto_generate_configs:
         git add configs
         git commit -m "ci: auto-generate configs"
         git push https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git HEAD:${CI_COMMIT_BRANCH}
+        echo "Generated configs updated, stopping pipeline"
+        exit 1
       fi
   rules:
     - changes:
