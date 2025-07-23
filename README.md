@@ -24,13 +24,15 @@ not need to specify the group name on the command line. Future groups such as
 `feature_store` or `kongming` can use the same pattern and will be picked up
 automatically when overrides are added.
 
-Each job template provides two files: `identity_config.yml.j2` for the
-behavior-related settings and `outputs.yml.j2` for any output paths. Running the
-generator renders these templates to `identity_config.yml` and `outputs.yml`
-under the corresponding job directory. Each generated YAML file contains plain
-key/value pairs. The rendered YAML includes an `environment` key that is set to
-`prod`, `test` or `experiment`. Non-production files also include an
-`experimentName` key with the experiment identifier.
+Each job template provides three files: `identity_config.yml.j2` for the
+behavior-related settings, `output_config.yml.j2` for any output paths, and
+`execution_config.yml.j2` for runtime options. Running the generator renders
+these templates to `identity_config.yml`, `output_config.yml`, and
+`execution_config.yml` under the corresponding job directory. Each generated
+YAML file contains plain key/value pairs. The rendered YAML includes an
+`environment` key that is set to `prod`, `test` or `experiment`.
+Non-production files also include an `experimentName` key with the experiment
+identifier.
 
 ## Usage
 Run the generator:

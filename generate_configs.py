@@ -64,10 +64,11 @@ TEMPLATE_ROOT = "config-templates"
 OVERRIDE_ROOT = "config-overrides"
 OUTPUT_ROOT = "configs"
 
-# Each job group contains templates for individual jobs. Each job has two
-# template files: ``identity_config.yml.j2`` and ``outputs.yml.j2``. These
-# render directly to ``identity_config.yml`` and ``outputs.yml`` under
-# ``configs`` with plain key/value pairs.
+# Each job group contains templates for individual jobs. A job may provide
+# multiple template files such as ``identity_config.yml.j2``,
+# ``output_config.yml.j2`` and ``execution_config.yml.j2``. These render
+# directly to files of the same name under ``configs`` with plain key/value
+# pairs.
 
 jinja_env = Environment(
     loader=FileSystemLoader(TEMPLATE_ROOT),
