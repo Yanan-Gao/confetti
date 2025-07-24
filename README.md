@@ -76,10 +76,41 @@ Templates can format dates using two global variables:
 Override these values in your job-specific configuration files when a different
 format is required.
 
+## Reserved keywords
+
+The generator populates several keys automatically. Do **not** override them
+unless you know what you are doing:
+
+- `environment` – one of `prod`, `test` or `experiment`.
+- `experimentName` – the experiment identifier for non-production environments.
+- `data_namespace` – base path partition derived from the environment.
+- `run_date` – the logical run date used by templates.
+- `run_date_format` – format string for `run_date` (default `%Y-%m-%d`).
+- `version_date_format` – version path date format (default `%Y%m%d`).
+- `full_version_date_format` – full timestamp format (default `%Y%m%d000000`).
+
+## Configuration groups
+
+Each job exposes three configuration files:
+
+1. **identity** – settings that impact results, rendered from
+   `identity_config.yml.j2`.
+2. **execution** – options controlling how the job runs. Currently the only
+   field is `forceRun`, rendered from `execution_config.yml.j2`.
+3. **output** – paths to all expected outputs, rendered from
+   `output_config.yml.j2`.
+
+Provide a single `config.yml` in your override folder to replace any values in
+these templates. If a template omits a default value for a field, that field
+becomes required in your override.
+
 ## CI pipeline
 
-When a merge request updates `config-overrides/` without regenerating the files
-under `configs/`, the GitLab pipeline automatically runs `make build env=all`.
-If new files are produced, a commit named `ci: auto-generate configs` is pushed
-back to the branch so the generated configs stay in sync. The generate job then
-fails to stop the current pipeline so the next run performs the deployment.
+Every branch triggers an automatic build. If you modify `config-overrides/`
+without updating the generated files, the pipeline runs `make build env=all` and
+pushes a commit named `ci: auto-generate configs` back to your branch with the
+updated configs. That build stops so the next run can handle deployment.
+
+Your branch deployment targets the **test** environment. After your changes are
+merged into `master`, the pipeline deploys the **experiment** and **prod**
+configs.
