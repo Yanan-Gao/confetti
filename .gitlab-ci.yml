@@ -17,12 +17,13 @@ auto_generate_configs:
     - make build env=all
     - |
       if ! git diff --quiet; then
-        git config user.email "${GITLAB_USER_EMAIL:-ci@example.com}"
-        git config user.name "${GITLAB_USER_NAME:-CI}"
-        git add configs
-        git commit -m "ci: auto-generate configs"
-        git push https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git HEAD:${CI_COMMIT_BRANCH}
-        echo "Generated configs updated, stopping pipeline"
+        # git config user.email "${GITLAB_USER_EMAIL:-ci@example.com}"
+        # git config user.name "${GITLAB_USER_NAME:-CI}"
+        # git add configs
+        # git commit -m "ci: auto-generate configs"
+        # git push https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git HEAD:${CI_COMMIT_REF_NAME}
+        git --no-pager diff --name-only
+        echo "Generated configs updated, failing pipeline"
         exit 1
       fi
   rules:
