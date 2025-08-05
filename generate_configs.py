@@ -5,9 +5,25 @@ import importlib
 from enum import Enum
 import re
 
+
+def log_info(message):
+    """Log an informational message."""
+    print(f"[INFO] {message}")
+
+
+def log_warn(message):
+    """Log a warning message."""
+    print(f"[WARN] {message}", file=sys.stderr)
+
+
+def log_error(message):
+    """Log an error message."""
+    print(f"[ERROR] {message}", file=sys.stderr)
+
+
 # Ensure the script is executed with Python 3
 if sys.version_info.major < 3:
-    sys.stderr.write("This script requires Python 3.\n")
+    log_error("This script requires Python 3.")
     sys.exit(1)
 
 
@@ -17,8 +33,27 @@ def ensure_dependency(pkg, import_name=None):
     try:
         importlib.import_module(import_name)
     except ImportError:
-        print(f"Installing missing dependency {pkg}...")
+        log_info(f"Installing missing dependency {pkg}...")
         subprocess.check_call([sys.executable, "-m", "pip", "install", pkg])
+
+
+# Ensure color output is available before other imports
+ensure_dependency("colorama")
+from colorama import Fore, Style, init as colorama_init
+
+colorama_init()
+
+
+def log_info(message):
+    print(f"{Fore.WHITE}[INFO] {message}{Style.RESET_ALL}")
+
+
+def log_warn(message):
+    print(f"{Fore.YELLOW}[WARN] {message}{Style.RESET_ALL}", file=sys.stderr)
+
+
+def log_error(message):
+    print(f"{Fore.RED}[ERROR] {message}{Style.RESET_ALL}", file=sys.stderr)
 
 
 ensure_dependency("PyYAML", "yaml")
@@ -144,30 +179,24 @@ def validate_cli_args(env_name, exp):
     """Validate and normalize the environment/experiment arguments."""
     if env_name == "all":
         if exp is not None:
-            print(
-                "When env=all, exp must not be provided",
-                file=sys.stderr,
-            )
+            log_error("When env=all, exp must not be provided")
             sys.exit(1)
         return env_name, "all"
 
     try:
         env = Env(env_name)
     except ValueError:
-        print(f"Unknown env '{env_name}'", file=sys.stderr)
+        log_error(f"Unknown env '{env_name}'")
         sys.exit(1)
 
     if env is Env.PROD:
         if exp is not None:
-            print("exp parameter is not allowed when env=prod", file=sys.stderr)
+            log_error("exp parameter is not allowed when env=prod")
             sys.exit(1)
         return env.value, "all"
 
     if not exp:
-        print(
-            "exp parameter is required when env is experiment or test",
-            file=sys.stderr,
-        )
+        log_error("exp parameter is required when env is experiment or test")
         sys.exit(1)
 
     return env.value, exp
@@ -188,9 +217,8 @@ def render_job(env_name, exp_name, env_path, group, job_name, template, filename
         with open(override_file) as f:
             data = yaml.safe_load(f) or {}
     else:
-        print(
-            f"Warning: no override config found at {override_file}; using defaults",
-            file=sys.stderr,
+        log_warn(
+            f"No override config found at {override_file}; using defaults"
         )
 
     data.setdefault("environment", env_name)
@@ -216,16 +244,14 @@ def render_job(env_name, exp_name, env_path, group, job_name, template, filename
         match = re.search(r"'([^']+)'", message)
         if match:
             missing_key = match.group(1)
-            print(
+            log_error(
                 f"Error generating {env_path}/{job_name}/{filename}: "
                 f"configuration '{missing_key}' is required but no value was provided "
-                f"in {override_file}",
-                file=sys.stderr,
+                f"in {override_file}"
             )
         else:
-            print(
-                f"Error generating {env_path}/{job_name}/{filename}: {message}",
-                file=sys.stderr,
+            log_error(
+                f"Error generating {env_path}/{job_name}/{filename}: {message}"
             )
         return
 
@@ -240,7 +266,7 @@ def render_job(env_name, exp_name, env_path, group, job_name, template, filename
             sort_keys=False,
             width=4096,
         )
-    print(f"Wrote {out_path}")
+    log_info(f"Wrote {out_path}")
 
 
 def generate_group(env_name, exp_name, env_path, group, templates):
@@ -274,7 +300,7 @@ def generate_all(env_filter="all", exp_filter="all"):
     if env_filter != "all":
         env_paths = [p for p in env_paths if p.startswith(env_filter)]
         if not env_paths:
-            print(f"Environment '{env_filter}' not found", file=sys.stderr)
+            log_error(f"Environment '{env_filter}' not found")
             return
 
     for env_path in env_paths:
@@ -296,9 +322,8 @@ def parse_cli_args(argv):
             elif key == "exp":
                 exp = value
     if env_name is None:
-        print(
-            "Usage: generate_configs.py env=<env|all> exp=<exp|all>",
-            file=sys.stderr,
+        log_error(
+            "Usage: generate_configs.py env=<env|all> exp=<exp|all>"
         )
         sys.exit(1)
 
