@@ -113,19 +113,22 @@ def find_env_roots():
 
 
 def find_groups_for_env(env_path):
-    """Return groups that contain at least one override under ``env_path``."""
+    """Return groups present under ``env_path``.
+
+    In the past, at least one ``.yml`` override file was required for a group to
+    be processed. This forced users to add empty override files merely to enable
+    generation. Now every directory directly under the environment path is
+    treated as a group. If a group contains no override files the jobs will warn
+    when rendered, but generation will still occur.
+    """
     groups = []
     base = os.path.join(OVERRIDE_ROOT, env_path)
     if not os.path.isdir(base):
         return groups
     for entry in os.listdir(base):
         group_dir = os.path.join(base, entry)
-        if not os.path.isdir(group_dir):
-            continue
-        for root, _, files in os.walk(group_dir):
-            if any(f.endswith(".yml") for f in files):
-                groups.append(entry)
-                break
+        if os.path.isdir(group_dir):
+            groups.append(entry)
     return groups
 
 
@@ -184,6 +187,11 @@ def render_job(env_name, exp_name, env_path, group, job_name, template, filename
     if os.path.exists(override_file):
         with open(override_file) as f:
             data = yaml.safe_load(f) or {}
+    else:
+        print(
+            f"Warning: no override config found at {override_file}; using defaults",
+            file=sys.stderr,
+        )
 
     data.setdefault("environment", env_name)
     if env_name in (Env.EXPERIMENT.value, Env.TEST.value):
