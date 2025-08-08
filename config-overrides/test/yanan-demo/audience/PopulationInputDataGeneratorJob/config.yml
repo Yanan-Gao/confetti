@@ -1,0 +1,4 @@
+# Default config for CalibrationInputDataGeneratorJob in experiment
+audienceJarBranch: gyn-AUDAUTO-3592-confetti-config-auto-resolver
+audienceJarVersion: latest
+inputDataS3Path: data/prod/audience/RSMV2/Imp_Seed_None/v=1

@@ -1,0 +1,3 @@
+audienceJarBranch: gyn-AUDAUTO-3592-onboard-confetti-in-offline-score
+audienceJarVersion: latest
+seed_emb_path: "s3://thetradedesk-mlplatform-us-east-1/configdata/prod/audience/embedding/RSMV2/v=1/{{ run_date.strftime('%Y%m%d') }}000000/"

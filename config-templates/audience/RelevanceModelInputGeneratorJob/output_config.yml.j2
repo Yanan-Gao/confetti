@@ -1,0 +1,2 @@
+rsmV2FeatureDestPath: "{{ rsmV2FeatureDestPath | default('s3a://thetradedesk-mlplatform-us-east-1/configdata/' ~ data_namespace ~ '/audience/schema/RSMV2/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/features.json') }}"
+optInSeedEmptyTagPath: "{{ optInSeedEmptyTagPath | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/_' ~ (subFolder | default('Full')) ~ '_EMPTY') }}"
