@@ -1,5 +1,6 @@
 env ?=
 exp ?=
+group ?=
 job ?=
 run_date ?=
 
@@ -18,6 +19,9 @@ clean:
 RUNTIME_ARGS := env=$(env)
 ifneq ($(strip $(exp)),)
 RUNTIME_ARGS += exp=$(exp)
+endif
+ifneq ($(strip $(group)),)
+RUNTIME_ARGS += group=$(group)
 endif
 ifneq ($(strip $(job)),)
 RUNTIME_ARGS += job=$(job)

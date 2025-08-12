@@ -128,6 +128,7 @@ def parse_cli_args(argv):
         print("env parameter is required", file=sys.stderr)
         sys.exit(1)
     exp = params.get("exp")
+    group = params.get("group", "audience")
     job = params.get("job")
 
     # Validate env/exp relationship
@@ -140,16 +141,20 @@ def parse_cli_args(argv):
             print("exp parameter is required for non-prod environments", file=sys.stderr)
             sys.exit(1)
 
-    runtime_args = {k: yaml.safe_load(v) for k, v in params.items() if k not in {"env", "exp", "job"}}
+    runtime_args = {
+        k: yaml.safe_load(v)
+        for k, v in params.items()
+        if k not in {"env", "exp", "job", "group"}
+    }
     if "run_date" in runtime_args:
         run_date_raw = str(runtime_args["run_date"])
         runtime_args["run_date"] = datetime.datetime.strptime(run_date_raw, "%Y%m%d").date()
 
-    return env, exp, job, runtime_args
+    return env, exp, group, job, runtime_args
 
 
-def render_job(env_path: str, job: str, runtime_args: Dict[str, object], aws: AwsCloudStorage) -> None:
-    job_dir = os.path.join(CONFIG_ROOT, env_path, "audience", job)
+def render_job(env_path: str, group: str, job: str, runtime_args: Dict[str, object], aws: AwsCloudStorage) -> None:
+    job_dir = os.path.join(CONFIG_ROOT, env_path, group, job)
     if not os.path.isdir(job_dir):
         raise ValueError(f"Job directory not found: {job_dir}")
 
@@ -173,34 +178,45 @@ def render_job(env_path: str, job: str, runtime_args: Dict[str, object], aws: Aw
     hash_input = "".join(rendered_files[f] for f in sorted(rendered_files))
     hash_id = _sha256_b64(hash_input)
 
-    out_dir = os.path.join(RUNTIME_ROOT, env_path, "audience", job, hash_id)
+    out_dir = os.path.join(RUNTIME_ROOT, env_path, group, job, hash_id)
     os.makedirs(out_dir, exist_ok=True)
-
     s3_prefix = (
         "s3://thetradedesk-mlplatform-us-east-1/configdata/confetti/"
-        f"{RUNTIME_ROOT}/{env_path}/audience/{job}/{hash_id}/"
+        f"{RUNTIME_ROOT}/{env_path}/{group}/{job}/{hash_id}/"
     )
 
     for filename, content in rendered_files.items():
         out_path = os.path.join(out_dir, filename)
         with open(out_path, "w") as f:
             f.write(content)
-        aws.upload_string(s3_prefix + filename, content)
-    log_info(f"Generated runtime configs for {env_path}/{job} -> {hash_id}")
+
+    failed_uploads = []
+    for filename, content in rendered_files.items():
+        try:
+            aws.upload_string(s3_prefix + filename, content)
+        except Exception as exc:  # pragma: no cover - network errors
+            log_info(f"Failed to upload {filename} to S3: {exc}")
+            failed_uploads.append(filename)
+
+    if failed_uploads:
+        failed_list = ", ".join(failed_uploads)
+        raise RuntimeError(f"S3 upload failed for files: {failed_list}")
+
+    log_info(f"Generated runtime configs for {env_path}/{group}/{job} -> {hash_id}")
 
 
 def main(argv):
-    env, exp, job, runtime_args = parse_cli_args(argv)
+    env, exp, group, job, runtime_args = parse_cli_args(argv)
     env_path = f"{env}/{exp}" if exp else env
     aws = AwsCloudStorage()
 
-    base_dir = os.path.join(CONFIG_ROOT, env_path, "audience")
+    base_dir = os.path.join(CONFIG_ROOT, env_path, group)
     if not os.path.isdir(base_dir):
         raise ValueError(f"No configs found under {base_dir}")
 
     jobs = [job] if job else [d for d in os.listdir(base_dir) if os.path.isdir(os.path.join(base_dir, d))]
     for j in jobs:
-        render_job(env_path, j, runtime_args, aws)
+        render_job(env_path, group, j, runtime_args, aws)
 
 
 if __name__ == "__main__":
