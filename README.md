@@ -76,6 +76,20 @@ make clean
 ```
 The clean target uses Python so it works on Windows as well as Unix-like systems.
 
+### Runtime configuration
+
+Once build-time configs are generated, runtime values such as `run_date` can be
+resolved and uploaded to a hashed location. Use:
+
+```bash
+make generate-runtime-config env=<env> [exp=<exp>] [job=<job>] run_date=<YYYYMMDD>
+```
+
+Non-production environments require an `exp` value while production must omit it.
+The command renders the runtime configuration, injects the `audienceJarPath`,
+writes the files under `runtime-configs/` and uploads them to the matching S3
+location.
+
 ## Reserved keywords
 
 The generator populates several keys automatically, which helps user to populate values automatically, or as 
