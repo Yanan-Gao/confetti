@@ -82,13 +82,14 @@ Once build-time configs are generated, runtime values such as `run_date` can be
 resolved and uploaded to a hashed location. Use:
 
 ```bash
-make generate-runtime-config env=<env> [exp=<exp>] [job=<job>] run_date=<YYYYMMDD>
+make generate-runtime-config env=<env> [exp=<exp>] [group=<group>] [job=<job>] run_date=<YYYYMMDD>
 ```
 
-Non-production environments require an `exp` value while production must omit it.
-The command renders the runtime configuration, injects the `audienceJarPath`,
-writes the files under `runtime-configs/` and uploads them to the matching S3
-location.
+`group` specifies the job group name (for example, `audience`) and defaults to
+`audience` when omitted. Non-production environments require an `exp` value while
+production must omit it. The command renders the runtime configuration, injects
+the `audienceJarPath`, writes the files under `runtime-configs/` and uploads them
+to the matching S3 location.
 
 ## Reserved keywords
 
