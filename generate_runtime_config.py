@@ -62,7 +62,12 @@ class AwsCloudStorage:
 
 
 def _inject_audience_jar_path(rendered: str, aws: AwsCloudStorage) -> str:
-    """Compute audienceJarPath from branch and version and remove those keys."""
+    """Compute audienceJarPath from branch and version and remove those keys.
+
+    If the rendered config already specifies ``audienceJarPath`` we simply
+    return it, avoiding the S3 lookup. Local configs are considered the source
+    of truth and are checked before falling back to S3.
+    """
     try:
         data = yaml.safe_load(rendered)
     except Exception as exc:  # pragma: no cover - malformed YAML
@@ -70,6 +75,12 @@ def _inject_audience_jar_path(rendered: str, aws: AwsCloudStorage) -> str:
 
     if not isinstance(data, dict):  # pragma: no cover - unexpected structure
         raise ValueError("Confetti YAML must be a mapping")
+
+    if "audienceJarPath" in data:
+        # Prefer explicitly provided path and drop auxiliary keys if present
+        data.pop("audienceJarBranch", None)
+        data.pop("audienceJarVersion", None)
+        return yaml.safe_dump(data, sort_keys=True)
 
     if "audienceJarBranch" not in data:
         raise ValueError("audienceJarBranch is required in Confetti config")
