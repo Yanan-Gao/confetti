@@ -153,8 +153,9 @@ def parse_cli_args(argv):
     return env, exp, group, job, runtime_args
 
 
-def render_job(env_path: str, group: str, job: str, runtime_args: Dict[str, object], aws: AwsCloudStorage) -> None:
-    job_dir = os.path.join(CONFIG_ROOT, env_path, group, job)
+def render_job(env: str, exp: Optional[str], group: str, job: str, runtime_args: Dict[str, object], aws: AwsCloudStorage) -> None:
+    config_env_path = f"{env}/{exp}" if exp else env
+    job_dir = os.path.join(CONFIG_ROOT, config_env_path, group, job)
     if not os.path.isdir(job_dir):
         raise ValueError(f"Job directory not found: {job_dir}")
 
@@ -178,11 +179,12 @@ def render_job(env_path: str, group: str, job: str, runtime_args: Dict[str, obje
     hash_input = "".join(rendered_files[f] for f in sorted(rendered_files))
     hash_id = _sha256_b64(hash_input)
 
-    out_dir = os.path.join(RUNTIME_ROOT, env_path, group, job, hash_id)
+    out_env_path = env
+    out_dir = os.path.join(RUNTIME_ROOT, out_env_path, group, job, hash_id)
     os.makedirs(out_dir, exist_ok=True)
     s3_prefix = (
         "s3://thetradedesk-mlplatform-us-east-1/configdata/confetti/"
-        f"{RUNTIME_ROOT}/{env_path}/{group}/{job}/{hash_id}/"
+        f"{RUNTIME_ROOT}/{out_env_path}/{group}/{job}/{hash_id}/"
     )
 
     for filename, content in rendered_files.items():
@@ -202,13 +204,13 @@ def render_job(env_path: str, group: str, job: str, runtime_args: Dict[str, obje
         failed_list = ", ".join(failed_uploads)
         raise RuntimeError(f"S3 upload failed for files: {failed_list}")
 
-    log_info(f"Generated runtime configs for {env_path}/{group}/{job} -> {hash_id}")
+    log_info(f"Generated runtime configs for {env}/{group}/{job} -> {hash_id}")
 
 
 def main(argv):
     env, exp, group, job, runtime_args = parse_cli_args(argv)
-    env_path = f"{env}/{exp}" if exp else env
     aws = AwsCloudStorage()
+    env_path = f"{env}/{exp}" if exp else env
 
     base_dir = os.path.join(CONFIG_ROOT, env_path, group)
     if not os.path.isdir(base_dir):
@@ -216,7 +218,7 @@ def main(argv):
 
     jobs = [job] if job else [d for d in os.listdir(base_dir) if os.path.isdir(os.path.join(base_dir, d))]
     for j in jobs:
-        render_job(env_path, group, j, runtime_args, aws)
+        render_job(env, exp, group, j, runtime_args, aws)
 
 
 if __name__ == "__main__":
