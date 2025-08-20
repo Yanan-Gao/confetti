@@ -1,0 +1,11 @@
+model: "{{ model | default('RSMV2') }}"
+tag: "{{ tag | default('Seed_None') }}"
+subFolderKey: "{{ subFolderKey | default('split') }}"
+subFolderValue: "{{ subFolderValue | default('OOS') }}"
+sampleSalt: "{{ sampleSalt | default('TRM') }}"
+sampleRatio: "{{ sampleRatio | default('1') }}"
+paddingColumns: {{ paddingColumns | default('ZipSiteLevel_Seed,Targets,SyntheticIds,MatchedSegments,SampleWeights') }}
+
+runDate: "{{ run_date.strftime(run_date_format) }}" # job running logical date
+audienceJarBranch: "{{ audienceJarBranch | default('master') }}"
+audienceJarVersion: "{{ audienceJarVersion | default('latest') }}"
