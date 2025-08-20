@@ -1,1 +1,1 @@
-policyOutputPath: "{{ policyS3Path | default('s3://thetradedesk-mlplatform-us-east-1/configdata/' ~ data_namespace ~ '/audience/policyTable/' ~ (model | default('RSM')) ~ '/v=1/' ~ run_date.strftime(full_version_date_format) ) }}"
+policyOutputPath: "{{ policyOutputPath | default('s3://thetradedesk-mlplatform-us-east-1/configdata/' ~ data_namespace ~ '/audience/policyTable/' ~ (model | default('RSM')) ~ '/v=1/' ~ run_date.strftime(full_version_date_format) ) }}"
