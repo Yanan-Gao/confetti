@@ -19,7 +19,7 @@ maxVersionsToKeep: 30
 reuseAggregatedSeedIfPossible: true
 bidImpressionRepartitionNum: 4096
 seedRepartitionNum: 32
-bidImpressionLookBack: 1
+bidImpressionLookBack: 0
 graphUniqueCountKeepThreshold: 20
 graphScoreThreshold: 0.01
 seedJobParallel: 8
@@ -32,9 +32,9 @@ aemPixelLimit: 5000
 selectedPixelsConfigPath: s3a://thetradedesk-mlplatform-us-east-1/configdata/prodTest/audience/other/AEM/selectedPixelTrackingTagIds/
 useSelectedPixel: false
 campaignFlightStartingBufferInDays: 14
-allRSMSeed: false
+allRSMSeed: true
 densityFeatureScoreNewSeedPrefix: s3a://thetradedesk-mlplatform-us-east-1/features/feature_store/prod/profiles/source=bidsimpression/index=SeedId/metadata/newSeed/v=1/
-readSeedDetailMode: false
+readSeedDetailMode: true
 saltToSampleUser: 0BgGCE
 policyS3Path: configdata/experiment/yanan-demo/audience/policyTable/RSMV2/v=1
 runDate: "{{ run_date.strftime('%Y-%m-%d') }}"

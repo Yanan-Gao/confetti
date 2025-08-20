@@ -10,6 +10,7 @@ subFolderKey: "{{ subFolderKey | default('mixedForward') }}"
 subFolderValue: "{{ subFolderValue | default('Calibration') }}"
 oosProdDataS3Path: "{{ oosProdDataS3Path | default('data/prod/audience/RSMV2/Seed_None/v=1') }}"
 coalesceProdData: "{{ coalesceProdData | default(False) }}"
+audienceResultCoalesce: {{ audienceResultCoalesce | default(4096) }}
 
 audienceJarBranch: "{{ audienceJarBranch | default('master') }}"
 audienceJarVersion: "{{ audienceJarVersion | default('latest') }}"
