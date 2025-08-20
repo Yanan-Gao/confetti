@@ -5,7 +5,7 @@ customInputDataPath: {{ customInputDataPath }}
 {% endif %}
 subFolderKey: "{{ subFolderKey | default('split') }}"
 subFolderValue: "{{ subFolderValue | default('Population') }}"
-syntheticIdLength: {{ syntheticIdLength | default(500) }}
+syntheticIdLength: {{ syntheticIdLength | default(2000) }}
 {#hitRateUserDownSampleHitPopulation: {{ hitRateUserDownSampleHitPopulation | default(1000000) }}#}
 {#saltToSampleHitRate: {{ saltToSampleHitRate | default('0BgGCE') }}#}
 populationOutputData3Path: {{ populationOutputData3Path | default('data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1') }},

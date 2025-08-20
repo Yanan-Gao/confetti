@@ -2,7 +2,7 @@ model: RSMV2
 inputDataS3Bucket: thetradedesk-mlplatform-us-east-1
 subFolderKey: split
 subFolderValue: Population
-syntheticIdLength: 500
+syntheticIdLength: 2000
 populationOutputData3Path: data/prod/audience/RSMV2/Seed_None/v=1,
 inputDataS3Path: data/prod/audience/RSMV2/Imp_Seed_None/v=1
 runDate: "{{ run_date.strftime('%Y-%m-%d') }}"
