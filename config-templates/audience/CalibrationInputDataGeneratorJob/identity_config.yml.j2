@@ -2,10 +2,10 @@ model: "{{ model | default('RSMV2') }}"
 tag: "{{ tag | default('Seed_None') }}"
 version: {{ version | default(1) }}
 runDate: "{{ run_date.strftime(run_date_format) }}" # job running logical date
-lookBack: {{ lookBack | default(3) }}
-startDate: "{{ startDate | default('2025-02-13') }}"
+lookBack: {{ lookBack | default(10) }}
+startDate: "{{ startDate | default('2025-03-20') }}"
 oosDataS3Bucket: "{{ oosDataS3Bucket | default('thetradedesk-mlplatform-us-east-1') }}"
-oosDataS3Path: "{{ oosDataS3Path | default('data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1') }}"
+oosDataS3Path: "{{ oosDataS3Path | default('data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=2') }}"
 subFolderKey: "{{ subFolderKey | default('mixedForward') }}"
 subFolderValue: "{{ subFolderValue | default('Calibration') }}"
 oosProdDataS3Path: "{{ oosProdDataS3Path | default('data/prod/audience/RSMV2/Seed_None/v=1') }}"
