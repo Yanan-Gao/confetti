@@ -11,8 +11,8 @@ syntheticIdLength: {{ syntheticIdLength | default(2000) }}
 audienceResultCoalesce: {{ audienceResultCoalesce | default(32768) }}
 maxChunkRecordCount: {{ maxChunkRecordCount | default(20480) }}
 paddingColumns: {{ paddingColumns | default('ZipSiteLevel_Seed,Targets,SyntheticIds,MatchedSegments,SampleWeights') }}
-populationOutputData3Path: {{ populationOutputData3Path | default('data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1') }},
-inputDataS3Path: "{{ inputDataS3Path | default('data/' ~ data_namespace ~ '/audience/RSMV2/Imp_Seed_None/v=1') }}"
+populationOutputData3Path: {{ populationOutputData3Path | default('data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1') }}
+inputDataS3Path: "{{ inputDataS3Path | default('data/' ~ data_namespace ~ '/audience/RSMV2/Imp_Seed_None/v=2') }}"
 runDate: "{{ run_date.strftime(run_date_format) }}" # job running logical date
 
 audienceJarBranch: "{{ audienceJarBranch | default('master') }}"
