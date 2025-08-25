@@ -1,1 +1,2 @@
-populationOutputData3Path: "s3://thetradedesk-mlplatform-us-east-1/data/test/yanan-demo/audience/RSMV2/Seed_None/v=1{{ run_date.strftime('%Y%m%d000000') }}/split=Population"
+populationOutputData3Path: "s3://thetradedesk-mlplatform-us-east-1/data/test/yanan-demo/audience/RSMV2/Seed_None/v=1/{{ run_date.strftime('%Y%m%d000000') }}/split=Population"
+populationOutputCBData3Path: "s3://thetradedesk-mlplatform-us-east-1/data/test/yanan-demo/audience/RSMV2/Seed_None/v=2/{{ run_date.strftime('%Y%m%d000000') }}/split=Population"

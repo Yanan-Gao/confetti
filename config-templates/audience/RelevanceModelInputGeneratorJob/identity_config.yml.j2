@@ -24,6 +24,11 @@ maxLabelLengthPerRow: {{ maxLabelLengthPerRow | default(50) }}
 minRowNumsPerPartition: {{ minRowNumsPerPartition | default(100000) }}
 trainValHoldoutTotalSplits: {{ trainValHoldoutTotalSplits | default(10) }}
 activeSeedIdWhiteList: "{{ activeSeedIdWhiteList | default('') }}"
+maxChunkRecordCount: {{ maxChunkRecordCount | default(20480) }}
+paddingColumns: {{ paddingColumns | default('ZipSiteLevel_Seed,Targets,SyntheticIds,MatchedSegments,SampleWeights') }}
+posSampleWeight: {{ posSampleWeight | default(2.52) }}
+negSampleWeight: {{ negSampleWeight | default(1) }}
+
 runDate: "{{ run_date.strftime(run_date_format) }}" # job running logical date
 
 audienceJarBranch: "{{ audienceJarBranch | default('master') }}"

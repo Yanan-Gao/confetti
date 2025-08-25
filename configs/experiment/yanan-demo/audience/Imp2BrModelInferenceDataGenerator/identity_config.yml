@@ -1,5 +1,6 @@
 feature_path: "s3://thetradedesk-mlplatform-us-east-1/configdata/prod/audience/schema/RSMV2/v=1/{{ run_date.strftime('%Y%m%d000000') }}/features.json"
-runDate: "{{ run_date.strftime('%Y-%m-%d') }}"
 samplingRate: '3'
+paddingColumns: ZipSiteLevel_Seed,Targets,SyntheticIds,MatchedSegments,SampleWeights
+runDate: "{{ run_date.strftime('%Y-%m-%d') }}"
 audienceJarBranch: master
 audienceJarVersion: latest
