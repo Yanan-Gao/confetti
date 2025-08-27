@@ -1,0 +1,16 @@
+model: RSM
+mlplatformS3Bucket: thetradedesk-mlplatform-us-east-1
+runDate: "{{ run_date.strftime('%Y-%m-%d') }}"
+anchorStartDate: '2025-03-05'
+smoothFactor: 30.0
+locationFactor: 0.8
+baselineHitRate: 1e-08
+recursiveWeight: 0.1
+writeMode: overwrite
+tmpNonSenEmbeddingDataS3Path: configdata/test/audience/embedding_temp/RSMV2/SeedNonsensitive/v=1
+tmpSenEmbeddingDataS3Path: configdata/test/audience/embedding_temp/RSMV2/SeedSensitive/v=1
+inferenceDataS3Path: data/test/audience/RSMV2/prediction
+embeddingSize: 64
+embeddingDataS3Path: configdata/test/audience/embedding/RSMV2/v=1
+audienceJarBranch: master
+audienceJarVersion: latest
