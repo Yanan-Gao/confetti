@@ -1,14 +1,14 @@
 modelName: "{{ modelName | default('RSMV2') }}"
-featureStoreReadEnv: "{{ featureStoreReadEnv | default(data_namespace) }}"
+featureStoreReadEnv: "{{ featureStoreReadEnv | default('prod') }}"
 useTmpFeatureGenerator: {{ useTmpFeatureGenerator | default(false) | lower }}
 extraSamplingThreshold: {{ extraSamplingThreshold | default(0.05) }}
 rsmV2FeatureSourcePath: "{{ rsmV2FeatureSourcePath | default('/featuresV2.json') }}"
-subFolder: "{{ subFolder | default('Full') }}"
-densityFeatureReadPathWithoutSlash: "{{ densityFeatureReadPathWithoutSlash | default('profiles/source=bidsimpression/index=TDID/job=DailyTDIDDensityScoreSplitJob/v=1') }}"
+{#subFolder: "{{ subFolder | default('Full') }}"#}
+{#densityFeatureReadPathWithoutSlash: "{{ densityFeatureReadPathWithoutSlash | default('profiles/source=bidsimpression/index=TDID/job=DailyTDIDDensityScoreSplitJob/v=1') }}"#}
 sensitiveFeatureColumns: "{{ sensitiveFeatureColumns | default('Site,Zip') }}"
 persistHoldoutSet: {{ persistHoldoutSet | default(true) | lower }}
-optInSeedType: "{{ optInSeedType | default('Active') }}"
-optInSeedFilterExpr: "{{ optInSeedFilterExpr | default('true') }}"
+optInSeedType: "{{ optInSeedType | default('Dynamic') }}"
+{#optInSeedFilterExpr: "{{ optInSeedFilterExpr | default('true') }}"#}
 posNegRatio: {{ posNegRatio | default(50) }}
 lowerLimitPosCntPerSeed: {{ lowerLimitPosCntPerSeed | default(200) }}
 RSMV2UserSampleSalt: "{{ rsmV2UserSampleSalt | default('TRM') }}"
@@ -17,7 +17,7 @@ RSMV2UserSampleRatio: {{ rsmV2UserSampleRatio | default(1) }}
 samplerName: "{{ samplerName | default('RSMV2') }}"
 overrideMode: {{ overrideMode | default(false) | lower }}
 splitRemainderHashSalt: "{{ splitRemainderHashSalt | default('split_RSMV2') }}"
-upLimitPosCntPerSeed: {{ upLimitPosCntPerSeed | default(40000) }}
+{#upLimitPosCntPerSeed: {{ upLimitPosCntPerSeed | default(40000) }}#}
 saveIntermediateResult: {{ saveIntermediateResult | default(false) | lower }}
 intermediateResultBasePathEndWithoutSlash: "{{ intermediateResultBasePathEndWithoutSlash | default('thetradedesk-mlplatform-us-east-1/users/yixuan.zheng/allinone/dataset/' ~ (subFolder | default('Full'))) }}"
 maxLabelLengthPerRow: {{ maxLabelLengthPerRow | default(50) }}
