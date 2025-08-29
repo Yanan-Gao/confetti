@@ -3,12 +3,9 @@ featureStoreReadEnv: prod
 useTmpFeatureGenerator: false
 extraSamplingThreshold: 0.05
 rsmV2FeatureSourcePath: /featuresV2.json
-subFolder: Full
-densityFeatureReadPathWithoutSlash: profiles/source=bidsimpression/index=TDID/job=DailyTDIDDensityScoreSplitJob/v=1
 sensitiveFeatureColumns: Site,Zip
 persistHoldoutSet: true
-optInSeedType: Active
-optInSeedFilterExpr: 'true'
+optInSeedType: Dynamic
 posNegRatio: 50
 lowerLimitPosCntPerSeed: 200
 RSMV2UserSampleSalt: TRM
@@ -17,7 +14,6 @@ RSMV2UserSampleRatio: 1
 samplerName: RSMV2
 overrideMode: false
 splitRemainderHashSalt: split_RSMV2
-upLimitPosCntPerSeed: 40000
 saveIntermediateResult: false
 intermediateResultBasePathEndWithoutSlash: thetradedesk-mlplatform-us-east-1/users/yixuan.zheng/allinone/dataset/Full
 maxLabelLengthPerRow: 50

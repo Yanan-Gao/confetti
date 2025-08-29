@@ -1,3 +1,38 @@
 rsmV2FeatureDestPath: "{{ rsmV2FeatureDestPath | default('s3a://thetradedesk-mlplatform-us-east-1/configdata/' ~ data_namespace ~ '/audience/schema/RSMV2/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/features.json') }}"
 optInSeedEmptyTagPath: "{{ optInSeedEmptyTagPath | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/_' ~ (subFolder | default('Full')) ~ '_EMPTY') }}"
-output_path: "{{ output_path | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/') }}"
+
+outputPath_SeedNonsensitiveNew_Holdout: "{{ output_path | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/SeedNonsensitiveNew=Holdout/') }}"
+outputPath_SeedNonsensitiveNew_Train: "{{ output_path | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/SeedNonsensitiveNew=Train/') }}"
+outputPath_SeedNonsensitiveNew_Val: "{{ output_path | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/SeedNonsensitiveNew=Val/') }}"
+
+outputPath_SeedNonsensitiveSmall_Holdout: "{{ output_path | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/SeedNonsensitiveSmall=Holdout/') }}"
+outputPath_SeedNonsensitiveSmall_Train: "{{ output_path | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/SeedNonsensitiveSmall=Train/') }}"
+outputPath_SeedNonsensitiveSmall_Val: "{{ output_path | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/SeedNonsensitiveSmall=Val/') }}"
+
+outputPath_SeedSensitiveNew_Holdout: "{{ output_path | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/SeedSensitiveNew=Holdout/') }}"
+outputPath_SeedSensitiveNew_Train: "{{ output_path | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/SeedSensitiveNew=Train/') }}"
+outputPath_SeedSensitiveNew_Val: "{{ output_path | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/SeedSensitiveNew=Val/') }}"
+
+outputPath_TTDOwnDataNonsensitiveSmall_Holdout: "{{ output_path | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/TTDOwnDataNonsensitiveSmall=Holdout/') }}"
+outputPath_TTDOwnDataNonsensitiveSmall_Train: "{{ output_path | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/TTDOwnDataNonsensitiveSmall=Train/') }}"
+outputPath_TTDOwnDataNonsensitiveSmall_Val: "{{ output_path | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/TTDOwnDataNonsensitiveSmall=Val/') }}"
+
+outputPath_TTDOwnDataSensitiveSmall_Holdout: "{{ output_path | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/TTDOwnDataSensitiveSmall=Holdout/') }}"
+outputPath_TTDOwnDataSensitiveSmall_Train: "{{ output_path | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/TTDOwnDataSensitiveSmall=Train/') }}"
+outputPath_TTDOwnDataSensitiveSmall_Val: "{{ output_path | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/TTDOwnDataSensitiveSmall=Val/') }}"
+
+outputPath_TTDOwnDataSensitiveFull_Holdout: "{{ output_path | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/TTDOwnDataSensitiveFull=Holdout/') }}"
+outputPath_TTDOwnDataSensitiveFull_Train: "{{ output_path | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/TTDOwnDataSensitiveFull=Train/') }}"
+outputPath_TTDOwnDataSensitiveFull_Val: "{{ output_path | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/TTDOwnDataSensitiveFull=Val/') }}"
+
+outputPath_SeedSensitiveFull_Holdout: "{{ output_path | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/SeedSensitiveFull=Holdout/') }}"
+outputPath_SeedSensitiveFull_Train: "{{ output_path | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/SeedSensitiveFull=Train/') }}"
+outputPath_SeedSensitiveFull_Val: "{{ output_path | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/SeedSensitiveFull=Val/') }}"
+
+outputPath_TTDOwnDataNonsensitiveFull_Holdout: "{{ output_path | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/TTDOwnDataNonsensitiveFull=Holdout/') }}"
+outputPath_TTDOwnDataNonsensitiveFull_Train: "{{ output_path | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/TTDOwnDataNonsensitiveFull=Train/') }}"
+outputPath_TTDOwnDataNonsensitiveFull_Val: "{{ output_path | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/TTDOwnDataNonsensitiveFull=Val/') }}"
+
+outputPath_SeedNonsensitiveFull_Holdout: "{{ output_path | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/SeedNonsensitiveFull=Holdout/') }}"
+outputPath_SeedNonsensitiveFull_Train: "{{ output_path | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/SeedNonsensitiveFull=Train/') }}"
+outputPath_SeedNonsensitiveFull_Val: "{{ output_path | default('s3a://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/RSMV2/Seed_None/v=1/' ~ run_date.strftime(full_version_date_format) ~ '/SeedNonsensitiveFull=Val/') }}"
