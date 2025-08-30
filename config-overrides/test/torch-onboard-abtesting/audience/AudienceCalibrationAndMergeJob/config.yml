@@ -1,6 +1,6 @@
 audienceJarBranch: master
 audienceJarVersion: latest
-embeddingDataS3Path: configdata/test/audience/embedding/RSMV2/v=1
+embeddingDataS3Path: configdata/test/torch-onboard-abtesting/audience/embedding/RSMV2/v=1
 tmpNonSenEmbeddingDataS3Path: configdata/test/audience/embedding_temp/RSMV2/SeedNonsensitive/v=1
 tmpSenEmbeddingDataS3Path: configdata/test/audience/embedding_temp/RSMV2/SeedSensitive/v=1
 inferenceDataS3Path: data/test/audience/RSMV2/prediction
