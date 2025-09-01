@@ -3,7 +3,7 @@ inputDataS3Bucket: thetradedesk-mlplatform-us-east-1
 subFolderKey: split
 subFolderValue: Population
 syntheticIdLength: 2000
-audienceResultCoalesce: 32768
+audienceResultCoalesce: 4096
 maxChunkRecordCount: 20480
 paddingColumns: ZipSiteLevel_Seed,Targets,SyntheticIds,MatchedSegments,SampleWeights
 populationOutputData3Path: data/prod/audience/RSMV2/Seed_None/v=1
