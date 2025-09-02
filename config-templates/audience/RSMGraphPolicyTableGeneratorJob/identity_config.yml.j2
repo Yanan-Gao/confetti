@@ -18,7 +18,7 @@ expiredDays: {{ expiredDays | default(7) }}
 policyTableLookBack: {{ policyTableLookBack | default(3) }}
 activeAdvertiserLookBackDays: {{ activeAdvertiserLookBackDays | default(180) }}
 newSeedLookBackDays: {{ newSeedLookBackDays | default(7) }}
-userDownSampleHitPopulation: {{ userDownSampleHitPopulation | default(100000) }}
+userDownSampleHitPopulation: {{ userDownSampleHitPopulation | default(1000000) }}
 lookBack: {{ lookBack | default(3) }}
 policyS3Bucket: "{{ policyS3Bucket | default('thetradedesk-mlplatform-us-east-1') }}"
 maxVersionsToKeep: {{ maxVersionsToKeep | default(30) }}
