@@ -76,6 +76,27 @@ make clean
 ```
 The clean target uses Python so it works on Windows as well as Unix-like systems.
 
+## EMR launcher service
+
+This repository also contains a very small Flask application that acts as a
+prototype for the proposed “one click” EMR job launcher. The service exposes
+two endpoints:
+
+* `POST /jobs` – render configs and submit a new cluster based on a job
+  template.
+* `POST /clone` – clone an existing cluster with optional configuration
+  overrides.
+
+Start the service locally with:
+
+```bash
+make serve
+```
+
+The implementation is intentionally lightweight and omits most error handling
+and user interface pieces. It is meant to serve as a starting point for
+further development.
+
 ## Reserved keywords
 
 The generator populates several keys automatically, which helps user to populate values automatically, or as 
