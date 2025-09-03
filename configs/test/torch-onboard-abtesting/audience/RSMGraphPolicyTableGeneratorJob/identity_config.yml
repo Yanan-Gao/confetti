@@ -12,7 +12,7 @@ expiredDays: 7
 policyTableLookBack: 3
 activeAdvertiserLookBackDays: 180
 newSeedLookBackDays: 7
-userDownSampleHitPopulation: 100000
+userDownSampleHitPopulation: 1000000
 lookBack: 3
 policyS3Bucket: thetradedesk-mlplatform-us-east-1
 maxVersionsToKeep: 30
