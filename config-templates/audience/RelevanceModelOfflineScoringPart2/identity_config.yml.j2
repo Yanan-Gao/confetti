@@ -21,7 +21,7 @@ sensitiveModel: {{ sensitiveModel | default(true) | lower }}
 minMaxSeedEmb: {{ minMaxSeedEmb | default(1e-6) }}
 r: {{ r | default(1e-8) }}
 loc_factor: {{ loc_factor | default(0.8) }}
-samplingRate: {{ loc_factor | default(3) }}
+samplingRate: {{ samplingRate | default(3) }}
 # TdidSeedScoreScale
 raw_score_path: "{{ raw_score_path | default('s3://thetradedesk-mlplatform-us-east-1/data/' ~ data_namespace ~ '/audience/scores/tdid2seedid_raw/v=1/date=' ~ run_date.strftime(version_date_format) ~ '/') }}"
 smooth_factor: {{ smooth_factor | default(30.0) }}
