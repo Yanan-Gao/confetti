@@ -34,7 +34,7 @@ useSelectedPixel: false
 campaignFlightStartingBufferInDays: 14
 allRSMSeed: true
 densityFeatureScoreNewSeedPrefix: s3a://thetradedesk-mlplatform-us-east-1/features/feature_store/prod/profiles/source=bidsimpression/index=SeedId/metadata/newSeed/v=1/
-readSeedDetailMode: true
+readSeedDetailMode: false
 saltToSampleUser: 0BgGCE
 policyS3Path: configdata/prod/audience/policyTable/RSM/v=1
 audioGraphExtensionRatio: 0.5
