@@ -7,6 +7,11 @@ stages:
   stage: deploy
   before_script:
     - pip install --quiet awscli
+  needs:
+    - job: auto_generate_configs
+      artifacts: true
+  dependencies:
+    - auto_generate_configs
 
 auto_generate_configs:
   image: python:3.9
@@ -15,20 +20,14 @@ auto_generate_configs:
     - apt-get update -y && apt-get install -y make git
   script:
     - make build env=all
-    - |
-      if ! git diff --quiet; then
-        # git config user.email "${GITLAB_USER_EMAIL:-ci@example.com}"
-        # git config user.name "${GITLAB_USER_NAME:-CI}"
-        # git add configs
-        # git commit -m "ci: auto-generate configs"
-        # git push https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git HEAD:${CI_COMMIT_REF_NAME}
-        echo "[ERROR] Detected changes not been reflected into following generated configs, failing pipeline..."
-        git --no-pager diff --name-only
-        exit 1
-      fi
+  artifacts:
+    paths:
+      - configs/
+    expire_in: 1 day
   rules:
-    - changes:
-        - config-overrides/**/*
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: on_success
+    - if: '$CI_COMMIT_BRANCH == "master"'
       when: on_success
     - when: never
 
@@ -38,9 +37,15 @@ deploy_test_configs:
     - aws s3 sync configs/test s3://thetradedesk-mlplatform-us-east-1/configdata/confetti/configs/test/
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - configs/test/**/*
-        - config-overrides/test/**/*
+      when: on_success
+    - when: never
+
+deploy_config_templates:
+  extends: .deploy_template
+  script:
+    - aws s3 sync config-templates s3://thetradedesk-mlplatform-us-east-1/configdata/confetti/config-templates/ --delete
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
       when: on_success
     - when: never
 
@@ -51,9 +56,6 @@ deploy_prod_configs:
     - aws s3 sync configs/prod s3://thetradedesk-mlplatform-us-east-1/configdata/confetti/configs/prod/ --delete
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
-      changes:
-        - configs/prod/**/*
-        - config-overrides/prod/**/*
       when: on_success
     - when: never
 
@@ -64,8 +66,5 @@ deploy_experiment_configs:
     - aws s3 sync configs/experiment s3://thetradedesk-mlplatform-us-east-1/configdata/confetti/configs/experiment/ --delete
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
-      changes:
-        - configs/experiment/**/*
-        - config-overrides/experiment/**/*
       when: on_success
     - when: never
