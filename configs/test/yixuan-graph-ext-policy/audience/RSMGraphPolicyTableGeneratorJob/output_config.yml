@@ -1,1 +1,0 @@
-policyOutputPath: "s3://thetradedesk-mlplatform-us-east-1/configdata/test/yixuan-graph-ext-policy/audience/policyTable/RSM/v=1/{{ run_date.strftime('%Y%m%d000000') }}"

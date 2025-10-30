@@ -1,2 +1,0 @@
-out_path: "s3://thetradedesk-mlplatform-us-east-1/data/test/torch-onboard-abtesting/audience/RSMV2/Imp_Seed_None/v=1/{{ run_date.strftime('%Y%m%d000000') }}/"
-cb_out_path: "s3://thetradedesk-mlplatform-us-east-1/data/test/torch-onboard-abtesting/audience/RSMV2/Imp_Seed_None/v=2/{{ run_date.strftime('%Y%m%d000000') }}/"

@@ -1,6 +1,0 @@
-seed_id_path: "s3://thetradedesk-mlplatform-us-east-1/data/test/torch-onboard-abtesting/audience/scores/seedids/v=2/date={{ run_date.strftime('%Y%m%d') }}/"
-dot_product_out_path: "s3://thetradedesk-mlplatform-us-east-1/data/test/torch-onboard-abtesting/audience/scores/tdid2seedid_raw/v=1/date={{ run_date.strftime('%Y%m%d') }}/"
-score_scale_out_path: "s3://thetradedesk-mlplatform-us-east-1/data/test/torch-onboard-abtesting/audience/scores/tdid2seedid/v=1/date={{ run_date.strftime('%Y%m%d') }}/"
-population_score_path: "s3://thetradedesk-mlplatform-us-east-1/data/test/torch-onboard-abtesting/audience/scores/seedpopulationscore/v=1/date={{ run_date.strftime('%Y%m%d') }}/"
-tdid_emb_path: "s3://thetradedesk-mlplatform-us-east-1/data/test/torch-onboard-abtesting/audience/RSMV2/emb/agg/v=1/date={{ run_date.strftime('%Y%m%d') }}/"
-full_out_path: "s3://thetradedesk-mlplatform-us-east-1/data/test/torch-onboard-abtesting/audience/scores/tdid2seedid_all/v=1/date={{ run_date.strftime('%Y%m%d') }}/"
