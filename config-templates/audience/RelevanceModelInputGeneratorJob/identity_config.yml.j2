@@ -11,6 +11,7 @@ lowerLimitPosCntPerSeed: {{ lowerLimitPosCntPerSeed | default(200) }}
 RSMV2UserSampleSalt: "{{ rsmV2UserSampleSalt | default('TRM') }}"
 RSMV2PopulationUserSampleIndex: "{{ rsmV2PopulationUserSampleIndex | default('3,5,7') }}"
 RSMV2UserSampleRatio: {{ rsmV2UserSampleRatio | default(1) }}
+audienceResultCoalesce: {{ audienceResultCoalesce| default(4096) }}
 samplerName: "{{ samplerName | default('RSMV2') }}"
 overrideMode: {{ overrideMode | default(false) | lower }}
 splitRemainderHashSalt: "{{ splitRemainderHashSalt | default('split_RSMV2') }}"
