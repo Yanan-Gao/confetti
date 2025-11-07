@@ -18,6 +18,7 @@ expiredDays: {{ expiredDays | default(7) }}
 policyTableLookBack: {{ policyTableLookBack | default(3) }}
 activeAdvertiserLookBackDays: {{ activeAdvertiserLookBackDays | default(180) }}
 newSeedLookBackDays: {{ newSeedLookBackDays | default(7) }}
+userDownSampleBasePopulation: {{ userDownSampleBasePopulation | default(1000000) }}
 userDownSampleHitPopulation: {{ userDownSampleHitPopulation | default(1000000) }}
 lookBack: {{ lookBack | default(3) }}
 policyS3Bucket: "{{ policyS3Bucket | default('thetradedesk-mlplatform-us-east-1') }}"
@@ -33,6 +34,7 @@ seedProcessLowerThreshold: {{ seedProcessLowerThreshold | default(2000) }}
 seedProcessUpperThreshold: {{ seedProcessUpperThreshold | default(100000000) }}
 ttdOwnDataUpperThreshold: {{ ttdOwnDataUpperThreshold | default(200000000) }}
 seedExtendGraphUpperThreshold: {{ seedExtendGraphUpperThreshold | default(3000000) }}
+policyTableResultCoalesce: {{ policyTableResultCoalesce | default(8) }}
 activeUserRatio: {{ activeUserRatio | default(0.4) }}
 aemPixelLimit: {{ aemPixelLimit | default(5000) }}
 selectedPixelsConfigPath: "{{ selectedPixelsConfigPath | default('s3a://thetradedesk-mlplatform-us-east-1/configdata/prodTest/audience/other/AEM/selectedPixelTrackingTagIds/') }}"
