@@ -1,0 +1,12 @@
+variants:
+  - name: sensitiveA
+    audienceResultCoalesce: 100
+  - name: nonSensitiveA
+    sensitiveFeatureColumns: ''
+    saveIntermediateResult: true
+  - name: sensitiveB
+    maxLabelLengthPerRow: 100
+  - name: nonSensitiveB
+    sensitiveFeatureColumns: ''
+  - name: sensitiveC
+  - name: nonSensitiveC

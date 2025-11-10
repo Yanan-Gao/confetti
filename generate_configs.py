@@ -1,3 +1,4 @@
+import copy
 import os
 import sys
 import subprocess
@@ -202,6 +203,106 @@ def validate_cli_args(env_name, exp):
     return env.value, exp
 
 
+_variant_cache = {}
+
+
+def _load_variant_defaults(group, job_name):
+    """Return the default variant definitions for a job, preserving order."""
+
+    cache_key = (group, job_name)
+    if cache_key in _variant_cache:
+        return copy.deepcopy(_variant_cache[cache_key])
+
+    variants_path = os.path.join(
+        TEMPLATE_ROOT,
+        group,
+        job_name,
+        "variants.yml",
+    )
+
+    if not os.path.exists(variants_path):
+        _variant_cache[cache_key] = []
+        return []
+
+    with open(variants_path) as f:
+        raw = yaml.safe_load(f) or {}
+
+    variants = raw.get("variants", []) if isinstance(raw, dict) else []
+    cleaned = []
+    for entry in variants:
+        if not isinstance(entry, dict):
+            log_warn(
+                f"Ignoring invalid variant entry in {variants_path}: {entry!r}"
+            )
+            continue
+        name = entry.get("name")
+        if not name:
+            log_warn(
+                f"Ignoring variant without name in {variants_path}: {entry!r}"
+            )
+            continue
+        cleaned.append(copy.deepcopy(entry))
+
+    _variant_cache[cache_key] = cleaned
+    return copy.deepcopy(cleaned)
+
+
+def _merge_variants(defaults, overrides, override_file):
+    """Merge default variants with overrides, keeping defaults order."""
+
+    defaults = [copy.deepcopy(v) for v in defaults]
+    overrides = overrides or []
+    if not isinstance(overrides, list):
+        log_warn(
+            f"Variants override in {override_file} must be a list; found {type(overrides).__name__}"
+        )
+        return defaults
+
+    override_map = {}
+    for entry in overrides:
+        if not isinstance(entry, dict):
+            log_warn(
+                f"Ignoring invalid variant override in {override_file}: {entry!r}"
+            )
+            continue
+        name = entry.get("name")
+        if not name:
+            log_warn(
+                f"Ignoring variant override without name in {override_file}: {entry!r}"
+            )
+            continue
+        override_map[name] = {k: v for k, v in entry.items() if k != "name"}
+
+    merged = []
+    seen = set()
+    for default in defaults:
+        name = default.get("name")
+        if not name:
+            continue
+        combined = copy.deepcopy(default)
+        override_values = override_map.pop(name, None)
+        if override_values:
+            combined.update(override_values)
+        merged.append(combined)
+        seen.add(name)
+
+    for name, override_values in override_map.items():
+        combined = {"name": name}
+        combined.update(override_values)
+        merged.append(combined)
+
+    if not merged and overrides:
+        # No defaults were present; use overrides as-is (after cleaning above)
+        for entry in overrides:
+            name = entry.get("name") if isinstance(entry, dict) else None
+            if not name:
+                continue
+            combined = {k: copy.deepcopy(v) for k, v in entry.items()}
+            merged.append(combined)
+
+    return merged
+
+
 def render_job(env_name, exp_name, env_path, group, job_name, template, filename):
     """Render a single job configuration file."""
     override_file = os.path.join(
@@ -221,6 +322,8 @@ def render_job(env_name, exp_name, env_path, group, job_name, template, filename
             f"No override config found at {override_file}; using defaults"
         )
 
+    variant_overrides = data.pop("variants", None)
+
     data.setdefault("environment", env_name)
     if env_name in (Env.EXPERIMENT.value, Env.TEST.value):
         data.setdefault("experimentName", exp_name)
@@ -233,40 +336,71 @@ def render_job(env_name, exp_name, env_path, group, job_name, template, filename
         partition = env_name
     data.setdefault("data_namespace", partition)
 
-    out_dir = os.path.join(OUTPUT_ROOT, env_path, group, job_name)
-    os.makedirs(out_dir, exist_ok=True)
-    out_path = os.path.join(out_dir, filename)
-    try:
-        rendered = template.render(**data)
-    except exceptions.UndefinedError as e:
-        message = str(e)
-        # Try to extract the missing variable name using regex, but always print the full message
-        match = re.search(r"'([^']+)'", message)
-        if match:
-            missing_key = match.group(1)
-            log_error(
-                f"Error generating {env_path}/{job_name}/{filename}: "
-                f"configuration '{missing_key}' is required but no value was provided "
-                f"in {override_file}"
-            )
-        else:
-            log_error(
-                f"Error generating {env_path}/{job_name}/{filename}: {message}"
-            )
-        return
+    default_variants = _load_variant_defaults(group, job_name)
+    merged_variants = _merge_variants(
+        default_variants,
+        variant_overrides,
+        override_file,
+    )
 
-    data_dict = yaml.safe_load(rendered) or {}
-    data_dict.pop("job_name", None)
+    variants_to_render = merged_variants if merged_variants else [None]
 
-    with open(out_path, "w") as f:
-        yaml.dump(
-            data_dict,
-            f,
-            Dumper=TemplateDumper,
-            sort_keys=False,
-            width=4096,
-        )
-    log_info(f"Wrote {out_path}")
+    for variant in variants_to_render:
+        variant_name = None
+        variant_values = {}
+        if isinstance(variant, dict):
+            variant_name = variant.get("name")
+            variant_values = {
+                k: copy.deepcopy(v)
+                for k, v in variant.items()
+                if k != "name"
+            }
+
+        render_data = copy.deepcopy(data)
+        render_data.update(variant_values)
+        if variant_name:
+            render_data["variant"] = variant_name
+        elif "variant" not in render_data:
+            render_data["variant"] = None
+
+        out_dir = os.path.join(OUTPUT_ROOT, env_path, group, job_name)
+        if variant_name:
+            out_dir = os.path.join(out_dir, variant_name)
+        os.makedirs(out_dir, exist_ok=True)
+        out_path = os.path.join(out_dir, filename)
+        try:
+            rendered = template.render(**render_data)
+        except exceptions.UndefinedError as e:
+            message = str(e)
+            match = re.search(r"'([^']+)'", message)
+            location = f"{env_path}/{job_name}"
+            if variant_name:
+                location += f"[{variant_name}]"
+            if match:
+                missing_key = match.group(1)
+                log_error(
+                    f"Error generating {location}/{filename}: "
+                    f"configuration '{missing_key}' is required but no value was provided "
+                    f"in {override_file}"
+                )
+            else:
+                log_error(
+                    f"Error generating {location}/{filename}: {message}"
+                )
+            continue
+
+        data_dict = yaml.safe_load(rendered) or {}
+        data_dict.pop("job_name", None)
+
+        with open(out_path, "w") as f:
+            yaml.dump(
+                data_dict,
+                f,
+                Dumper=TemplateDumper,
+                sort_keys=False,
+                width=4096,
+            )
+        log_info(f"Wrote {out_path}")
 
 
 def generate_group(env_name, exp_name, env_path, group, templates):
