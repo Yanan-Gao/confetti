@@ -26,10 +26,13 @@ automatically when overrides are added.
 
 Each job template provides three files: `identity_config.yml.j2` for the
 behavior-related settings, `output_config.yml.j2` for any output paths, and
-`execution_config.yml.j2` for runtime options. Running the generator renders
-these templates to `identity_config.yml`, `output_config.yml`, and
-`execution_config.yml` under the corresponding job directory. Each generated
-YAML file contains plain key/value pairs. The rendered YAML includes an
+`execution_config.yml.j2` for runtime options. Templates may also include an
+optional `variants.yml` alongside the Jinja files. When present, the generator
+renders the job once per variant defined in that file and writes each variant to
+its own subdirectory. Running the generator renders these templates to
+`identity_config.yml`, `output_config.yml`, and `execution_config.yml` under the
+corresponding job directory (or variant subdirectory). Each generated YAML file
+contains plain key/value pairs. The rendered YAML includes an
 `environment` key that is set to `prod`, `test` or `experiment`.
 Non-production files also include an `experimentName` key with the experiment
 identifier.
@@ -82,14 +85,16 @@ Once build-time configs are generated, runtime values such as `run_date` can be
 resolved and uploaded to a hashed location. Use:
 
 ```bash
-make generate-runtime-config env=<env> [exp=<exp>] [group=<group>] [job=<job>] run_date=<YYYYMMDD>
+make generate-runtime-config env=<env> [exp=<exp>] [group=<group>] [job=<job>] [variant=<variant>] run_date=<YYYYMMDD>
 ```
 
 `group` specifies the job group name (for example, `audience`) and defaults to
 `audience` when omitted. Non-production environments require an `exp` value while
-production must omit it. The command renders the runtime configuration, injects
-the `audienceJarPath`, writes the files under `runtime-configs/` and uploads them
-to the matching S3 location.
+production must omit it. Jobs that define multiple variants require the
+`variant` flag to select which variant to render (unless only a single variant is
+present). The command renders the runtime configuration, injects the
+`audienceJarPath`, writes the files under `runtime-configs/` and uploads them to
+the matching S3 location.
 
 ## Reserved keywords
 
@@ -103,6 +108,7 @@ runtime value placeholder etc. Do **not** override them unless you know what you
 - `run_date_format` – format string for `run_date` (default `%Y-%m-%d`).
 - `version_date_format` – version path date format (default `%Y%m%d`).
 - `full_version_date_format` – full timestamp format (default `%Y%m%d000000`).
+- `variant` – the current job variant when rendering variant-aware templates.
 
 ## Configuration groups
 
@@ -117,7 +123,10 @@ Each job exposes three configuration files:
 
 Provide a single `config.yml` in your override folder to replace any values in
 these templates. If a template omits a default value for a field, that field
-becomes required in your override.
+becomes required in your override. Jobs that use variants can additionally
+declare a `variants` list in their override file. Each list item must include a
+`name` matching the variant definition and any fields that should override the
+defaults for that variant.
 
 ## CI pipeline
 

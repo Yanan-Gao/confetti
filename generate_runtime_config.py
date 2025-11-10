@@ -1,3 +1,4 @@
+import copy
 import os
 import sys
 import subprocess
@@ -130,6 +131,7 @@ def parse_cli_args(argv):
     exp = params.get("exp")
     group = params.get("group", "audience")
     job = params.get("job")
+    variant = params.get("variant")
 
     # Validate env/exp relationship
     if env == "prod":
@@ -150,14 +152,43 @@ def parse_cli_args(argv):
         run_date_raw = str(runtime_args["run_date"])
         runtime_args["run_date"] = datetime.datetime.strptime(run_date_raw, "%Y%m%d").date()
 
-    return env, exp, group, job, runtime_args
+    return env, exp, group, job, variant, runtime_args
 
 
-def render_job(env: str, exp: Optional[str], group: str, job: str, runtime_args: Dict[str, object], aws: AwsCloudStorage) -> None:
+def render_job(
+    env: str,
+    exp: Optional[str],
+    group: str,
+    job: str,
+    variant: Optional[str],
+    runtime_args: Dict[str, object],
+    aws: AwsCloudStorage,
+) -> None:
     config_env_path = f"{env}/{exp}" if exp else env
     job_dir = os.path.join(CONFIG_ROOT, config_env_path, group, job)
     if not os.path.isdir(job_dir):
         raise ValueError(f"Job directory not found: {job_dir}")
+
+    render_args: Dict[str, object] = copy.deepcopy(runtime_args)
+
+    if variant:
+        job_dir = os.path.join(job_dir, variant)
+        if not os.path.isdir(job_dir):
+            raise ValueError(
+                f"Variant '{variant}' not found for job {group}/{job} under {config_env_path}"
+            )
+        render_args.setdefault("variant", variant)
+    else:
+        subdirs = [d for d in os.listdir(job_dir) if os.path.isdir(os.path.join(job_dir, d))]
+        if subdirs:
+            if len(subdirs) == 1:
+                variant = subdirs[0]
+                job_dir = os.path.join(job_dir, variant)
+                render_args.setdefault("variant", variant)
+            else:
+                raise ValueError(
+                    "Job contains multiple variants; specify variant=<name>"
+                )
 
     jenv = Environment(loader=BaseLoader, undefined=StrictUndefined)
 
@@ -168,7 +199,7 @@ def render_job(env: str, exp: Optional[str], group: str, job: str, runtime_args:
         path = os.path.join(job_dir, filename)
         with open(path) as f:
             template = jenv.from_string(f.read())
-        rendered = template.render(**runtime_args)
+        rendered = template.render(**render_args)
         if filename == "identity_config.yml":
             rendered = _inject_audience_jar_path(rendered, aws)
         rendered_files[filename] = rendered
@@ -180,12 +211,17 @@ def render_job(env: str, exp: Optional[str], group: str, job: str, runtime_args:
     hash_id = _sha256_b64(hash_input)
 
     out_env_path = env
-    out_dir = os.path.join(RUNTIME_ROOT, out_env_path, group, job, hash_id)
+    path_components = [RUNTIME_ROOT, out_env_path, group, job]
+    if variant:
+        path_components.append(variant)
+    path_components.append(hash_id)
+    out_dir = os.path.join(*path_components)
     os.makedirs(out_dir, exist_ok=True)
-    s3_prefix = (
-        "s3://thetradedesk-mlplatform-us-east-1/configdata/confetti/"
-        f"{RUNTIME_ROOT}/{out_env_path}/{group}/{job}/{hash_id}/"
-    )
+    s3_prefix = "s3://thetradedesk-mlplatform-us-east-1/configdata/confetti/"
+    s3_prefix += f"{RUNTIME_ROOT}/{out_env_path}/{group}/{job}/"
+    if variant:
+        s3_prefix += f"{variant}/"
+    s3_prefix += f"{hash_id}/"
 
     for filename, content in rendered_files.items():
         out_path = os.path.join(out_dir, filename)
@@ -204,11 +240,14 @@ def render_job(env: str, exp: Optional[str], group: str, job: str, runtime_args:
         failed_list = ", ".join(failed_uploads)
         raise RuntimeError(f"S3 upload failed for files: {failed_list}")
 
-    log_info(f"Generated runtime configs for {env}/{group}/{job} -> {hash_id}")
+    variant_suffix = f"/{variant}" if variant else ""
+    log_info(
+        f"Generated runtime configs for {env}/{group}/{job}{variant_suffix} -> {hash_id}"
+    )
 
 
 def main(argv):
-    env, exp, group, job, runtime_args = parse_cli_args(argv)
+    env, exp, group, job, variant, runtime_args = parse_cli_args(argv)
     aws = AwsCloudStorage()
     env_path = f"{env}/{exp}" if exp else env
 
@@ -216,9 +255,12 @@ def main(argv):
     if not os.path.isdir(base_dir):
         raise ValueError(f"No configs found under {base_dir}")
 
+    if variant and not job:
+        raise ValueError("variant parameter requires job to be specified")
+
     jobs = [job] if job else [d for d in os.listdir(base_dir) if os.path.isdir(os.path.join(base_dir, d))]
     for j in jobs:
-        render_job(env, exp, group, j, runtime_args, aws)
+        render_job(env, exp, group, j, variant if job else None, runtime_args, aws)
 
 
 if __name__ == "__main__":

@@ -1,2 +1,6 @@
 audienceJarBranch: gyn-AUDAUTO-3592-onboard-confetti-RSM-etl-job
 audienceJarVersion: latest
+variants:
+  - name: nonSensitiveA
+    sensitiveFeatureColumns: ''
+    saveIntermediateResult: false
